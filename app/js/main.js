@@ -1,9 +1,24 @@
-import { loadJSON } from './helper-functions';
+import { loadJSON, imagePreloader } from './helper-functions';
 
 
+//dummy text
 document.body.innerHTML = 'Hello world! Javascript is working just fine :D';
 
-let images = loadJSON('./model/images.json');
+//get JSON
+const file = loadJSON('./model/images.json');
 
-console.log(images);
+//Preloading
+const imageSourceArray = file.images.map((element) => {
+    return element.source;
+});
+
+
+imagePreloader(
+  imageSourceArray,
+  () => document.body.innerHTML='Images Loaded'
+);
+
+//preloading test
+
+console.log(imageSourceArray);
 

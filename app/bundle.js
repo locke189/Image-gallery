@@ -48,11 +48,24 @@
 	
 	var _helperFunctions = __webpack_require__(1);
 	
+	//dummy text
 	document.body.innerHTML = 'Hello world! Javascript is working just fine :D';
 	
-	var images = (0, _helperFunctions.loadJSON)('./model/images.json');
+	//get JSON
+	var file = (0, _helperFunctions.loadJSON)('./model/images.json');
 	
-	console.log(images);
+	//Preloading
+	var imageSourceArray = file.images.map(function (element) {
+	  return element.source;
+	});
+	
+	(0, _helperFunctions.imagePreloader)(imageSourceArray, function () {
+	  return document.body.innerHTML = 'Images Loaded';
+	});
+	
+	//preloading test
+	
+	console.log(imageSourceArray);
 
 /***/ },
 /* 1 */
@@ -64,8 +77,9 @@
 	  value: true
 	});
 	exports.loadJSON = loadJSON;
+	exports.imagePreloader = imagePreloader;
 	/**
-	* loads json file into object
+	* Loads JSON file into object.
 	*
 	* @return {data}, returns object
 	*/
@@ -79,6 +93,19 @@
 	  data = JSON.parse(request.responseText);
 	  console.log(data);
 	  return data;
+	}
+	
+	/**
+	* Image Preloading
+	*
+	*
+	*/
+	function imagePreloader(array, callback) {
+	  var images = new Image();
+	
+	  images.src = array;
+	
+	  if (callback) images.onLoad = callback();
 	}
 
 /***/ }

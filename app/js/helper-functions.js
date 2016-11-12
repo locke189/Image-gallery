@@ -1,5 +1,5 @@
   /**
-  * loads json file into object
+  * Loads JSON file into object.
   *
   * @return {data}, returns object
   */
@@ -15,4 +15,19 @@ export function loadJSON(url){
   return data;
 }
 
+  /**
+  * Image Preloading
+  *
+  *
+  */
+export function imagePreloader(array, callback){
+  const images = new Image();
+
+
+  images.src = array;
+
+
+  if(callback)
+  images.onLoad = callback();
+}
 

@@ -50,38 +50,32 @@
 	
 	var _galleryImage = __webpack_require__(2);
 	
-	(function () {
+	var _gallery = __webpack_require__(3);
 	
-	  //get JSON
-	  var file = (0, _helperFunctions.loadJSON)('./model/images.json');
+	//get JSON
+	var file = (0, _helperFunctions.loadJSON)('./model/images.json');
 	
-	  //Preloading
-	  var imageSourceArray = file.images.map(function (element) {
-	    return element.source;
-	  });
+	//Preloading
+	var imageSourceArray = file.images.map(function (element) {
+	  return element.source;
+	});
 	
-	  (0, _helperFunctions.imagePreloader)(imageSourceArray, function () {
-	    return document.body.innerHTML = '\n    <section id="container"></section>\n    <button id="myButton" >Next Project</button>\n    ';
-	  });
-	  //preloading test
+	(0, _helperFunctions.imagePreloader)(imageSourceArray, function () {
+	  return document.body.innerHTML = '\n    <section id="container"></section>\n    <button id="myButton" >Next Project</button>\n    ';
+	});
+	//preloading test
 	
-	  //image test
-	  var element = document.getElementById("container");
-	  var myButton = document.getElementById("myButton");
-	  var galleryImage = new _galleryImage.GalleryImage(element, 1, 'http://placehold.it/1024x768/ffff00?text=Image6', "Description of Image #1");
+	//image test
+	var element = document.getElementById("container");
+	var myButton = document.getElementById("myButton");
 	
-	  //Main
+	//Gallery test
+	var gallery = new _gallery.Gallery(element, file.images);
 	
-	  galleryImage.renderImage(container, { x: 100, y: 100 });
-	  console.log(galleryImage);
-	
-	  //change image test
-	  function buttonClick() {
-	    galleryImage.changeImage('http://placehold.it/1024x768/ff00ff?text=Image24', "Description of Image #24");
-	  }
-	
-	  myButton.onclick = buttonClick;
-	})();
+	window.onload = function (event) {
+	  console.log("window.onload");
+	  gallery.initialize();
+	};
 
 /***/ },
 /* 1 */
@@ -141,7 +135,7 @@
 	*
 	*/
 	var GalleryImage = exports.GalleryImage = function () {
-	  function GalleryImage(element, position) {
+	  function GalleryImage(parentElement, position) {
 	    var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 	    var description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
 	
@@ -150,18 +144,24 @@
 	    this.imgSource = source;
 	    this.imgDescription = description;
 	    this.position = position;
-	    this.template = '\n      <div  class="img-wrap gallery-image-' + this.position + '">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
+	    this.template = '\n      <div  id="' + this.position + '" class="img-wrap gallery-image-' + this.position + '">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
 	    this.renderAnimation = new TimelineLite();
 	    this.fadeAnimation = new TimelineLite();
 	    this.enlargeAnimation = new TimelineLite();
 	
-	    element.innerHTML += this.template;
+	    parentElement.innerHTML = this.template + parentElement.innerHTML;
 	    this.element = document.querySelector('.gallery-image-' + this.position);
-	    this.element.onclick = this.fullsizeImage.bind(this);
-	    this.element.children[0].onclick = this.thumbnailImage.bind(this);
+	
+	    console.log(this.element);
 	  }
 	
 	  _createClass(GalleryImage, [{
+	    key: 'setListeners',
+	    value: function setListeners(position) {
+	      document.getElementById(position).addEventListener("click", this.fullsizeImage.bind(this));
+	      this.element.children[0].onclick = this.thumbnailImage.bind(this);
+	    }
+	  }, {
 	    key: 'changeImage',
 	    value: function changeImage() {
 	      var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -203,16 +203,30 @@
 	  }, {
 	    key: 'fullsizeImage',
 	    value: function fullsizeImage(event) {
-	      console.log('I\'m getting big...');
-	      this.element.children[0].classList.remove("hidden");
-	      this.element.children[1].classList.remove("thumbnail");
-	      this.element.children[1].classList.add("fullsize");
+	      var self = this;
+	      console.log('I\'m getting big... ' + self.position);
+	      console.log(self.element);
+	      self.element.children[0].classList.remove("hidden");
+	      self.element.children[1].classList.remove("thumbnail");
+	      self.element.children[1].classList.add("fullsize");
+	      event.stopPropagation();
+	    }
+	  }, {
+	    key: 'fullsizeImage2',
+	    value: function fullsizeImage2(event) {
+	      var self = this;
+	      console.log('I\'m getting big... ' + self.position);
+	      console.log(this.element);
+	      self.element.children[0].classList.remove("hidden");
+	      self.element.children[1].classList.remove("thumbnail");
+	      self.element.children[1].classList.add("fullsize");
 	      event.stopPropagation();
 	    }
 	  }, {
 	    key: 'thumbnailImage',
 	    value: function thumbnailImage(event) {
 	      console.log('I\'m getting small...');
+	      console.log(this.element);
 	      this.element.children[0].classList.add("hidden");
 	      this.element.children[1].classList.add("thumbnail");
 	      this.element.children[1].classList.remove("fullsize");
@@ -221,6 +235,53 @@
 	  }]);
 
 	  return GalleryImage;
+	}();
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.Gallery = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _galleryImage = __webpack_require__(2);
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Gallery = exports.Gallery = function () {
+	  function Gallery(element) {
+	    var _this = this;
+	
+	    var arrayOfImages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+	
+	    _classCallCheck(this, Gallery);
+	
+	    this.galleryImageArray = [];
+	    this.element = element;
+	    this.galleryImageArray = arrayOfImages.map(function (imageObject, index) {
+	      return new _galleryImage.GalleryImage(_this.element, index, imageObject.source, imageObject.descrption);
+	    });
+	
+	    console.log(this.galleryImageArray);
+	  }
+	
+	  _createClass(Gallery, [{
+	    key: "initialize",
+	    value: function initialize() {
+	      this.galleryImageArray.forEach(function (galleryImage, index) {
+	        var element = document.querySelector(".gallery-image-" + index);
+	        element.addEventListener("click", galleryImage.fullsizeImage.bind(galleryImage));
+	      });
+	    }
+	  }]);
+
+	  return Gallery;
 	}();
 
 /***/ }

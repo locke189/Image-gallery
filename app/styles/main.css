@@ -3,4 +3,29 @@ body {
   font-family: 'Arial', sans-serif;
   font-size: 2em; }
 
+.pos {
+  position: relative;
+  top: 400px;
+  left: 800px; }
+
+.hidden {
+  display: none; }
+
+.thumbnail {
+  height: 300px;
+  width: 400px; }
+
+.fullsize {
+  height: 100%;
+  width: 100%; }
+
+.img-wrap {
+  position: relative; }
+
+.img-wrap .close {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  z-index: 100; }
+
 /*# sourceMappingURL=main.css.map */

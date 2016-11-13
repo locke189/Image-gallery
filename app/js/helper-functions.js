@@ -11,7 +11,6 @@ export function loadJSON(url){
   request.open("GET", url, false);
   request.send(null);
   data = JSON.parse(request.responseText);
-  console.log(data);
   return data;
 }
 
@@ -22,12 +21,9 @@ export function loadJSON(url){
   */
 export function imagePreloader(array, callback){
   const images = new Image();
-
-
   images.src = array;
-
-
   if(callback)
-  images.onLoad = callback();
+    images.onLoad = callback();
 }
+
 

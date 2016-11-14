@@ -9,7 +9,7 @@ export class GalleryImage{
     this.imgDescription = description;
     this.position = position;
     this.template = `
-      <div  id="${this.position}" class="img-wrap gallery-image-${this.position}">
+      <div class="img-wrap gallery-image">
         <span class="close hidden">&times;</span>
         <img class="thumbnail" name="${this.imgDescription}" src="${this.imgSource}">
       </div>
@@ -18,16 +18,8 @@ export class GalleryImage{
     this.fadeAnimation = new TimelineLite();
     this.enlargeAnimation = new TimelineLite();
 
-    parentElement.innerHTML = this.template + parentElement.innerHTML;
-    this.element = document.querySelector(`.gallery-image-${this.position}`);
+    parentElement.innerHTML += this.template;
 
-
-    console.log(this.element);
-  }
-
-  setListeners(position){
-    document.getElementById(position).addEventListener("click", this.fullsizeImage.bind(this) ) ;
-    this.element.children[0].onclick = this.thumbnailImage.bind(this);
   }
 
   changeImage(source='', description = ''){
@@ -59,33 +51,4 @@ export class GalleryImage{
 
   restartAnimation(){
     this.renderAnimation.restart();  }
-
-  fullsizeImage(event){
-    let self = this;
-    console.log(`I'm getting big... ${self.position}`);
-    console.log(self.element);
-    self.element.children[0].classList.remove("hidden");
-    self.element.children[1].classList.remove("thumbnail");
-    self.element.children[1].classList.add("fullsize");
-    event.stopPropagation();
-  }
-
-  fullsizeImage2(event){
-    let self = this;
-    console.log(`I'm getting big... ${self.position}`);
-    console.log(this.element);
-    self.element.children[0].classList.remove("hidden");
-    self.element.children[1].classList.remove("thumbnail");
-    self.element.children[1].classList.add("fullsize");
-    event.stopPropagation();
-  }
-
-  thumbnailImage(event){
-    console.log(`I'm getting small...`);
-    console.log(this.element);
-    this.element.children[0].classList.add("hidden");
-    this.element.children[1].classList.add("thumbnail");
-    this.element.children[1].classList.remove("fullsize");
-    event.stopPropagation();
-  }
 }

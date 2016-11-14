@@ -144,24 +144,15 @@
 	    this.imgSource = source;
 	    this.imgDescription = description;
 	    this.position = position;
-	    this.template = '\n      <div  id="' + this.position + '" class="img-wrap gallery-image-' + this.position + '">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
+	    this.template = '\n      <div class="img-wrap gallery-image">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
 	    this.renderAnimation = new TimelineLite();
 	    this.fadeAnimation = new TimelineLite();
 	    this.enlargeAnimation = new TimelineLite();
 	
-	    parentElement.innerHTML = this.template + parentElement.innerHTML;
-	    this.element = document.querySelector('.gallery-image-' + this.position);
-	
-	    console.log(this.element);
+	    parentElement.innerHTML += this.template;
 	  }
 	
 	  _createClass(GalleryImage, [{
-	    key: 'setListeners',
-	    value: function setListeners(position) {
-	      document.getElementById(position).addEventListener("click", this.fullsizeImage.bind(this));
-	      this.element.children[0].onclick = this.thumbnailImage.bind(this);
-	    }
-	  }, {
 	    key: 'changeImage',
 	    value: function changeImage() {
 	      var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -199,38 +190,6 @@
 	    key: 'restartAnimation',
 	    value: function restartAnimation() {
 	      this.renderAnimation.restart();
-	    }
-	  }, {
-	    key: 'fullsizeImage',
-	    value: function fullsizeImage(event) {
-	      var self = this;
-	      console.log('I\'m getting big... ' + self.position);
-	      console.log(self.element);
-	      self.element.children[0].classList.remove("hidden");
-	      self.element.children[1].classList.remove("thumbnail");
-	      self.element.children[1].classList.add("fullsize");
-	      event.stopPropagation();
-	    }
-	  }, {
-	    key: 'fullsizeImage2',
-	    value: function fullsizeImage2(event) {
-	      var self = this;
-	      console.log('I\'m getting big... ' + self.position);
-	      console.log(this.element);
-	      self.element.children[0].classList.remove("hidden");
-	      self.element.children[1].classList.remove("thumbnail");
-	      self.element.children[1].classList.add("fullsize");
-	      event.stopPropagation();
-	    }
-	  }, {
-	    key: 'thumbnailImage',
-	    value: function thumbnailImage(event) {
-	      console.log('I\'m getting small...');
-	      console.log(this.element);
-	      this.element.children[0].classList.add("hidden");
-	      this.element.children[1].classList.add("thumbnail");
-	      this.element.children[1].classList.remove("fullsize");
-	      event.stopPropagation();
 	    }
 	  }]);
 
@@ -276,7 +235,22 @@
 	    value: function initialize() {
 	      this.galleryImageArray.forEach(function (galleryImage, index) {
 	        var element = document.querySelector(".gallery-image-" + index);
-	        element.addEventListener("click", galleryImage.fullsizeImage.bind(galleryImage));
+	
+	        element.children[0].addEventListener("click", function (event) {
+	          element.children[0].classList.add("hidden");
+	          element.children[1].classList.add("thumbnail");
+	          element.children[1].classList.remove("fullsize");
+	          event.stopPropagation();
+	        });
+	
+	        element.children[1].addEventListener("click", function (event) {
+	          element.children[0].classList.remove("hidden");
+	          element.children[1].classList.remove("thumbnail");
+	          element.children[1].classList.add("fullsize");
+	          event.stopPropagation();
+	        });
+	
+	        galleryImage.renderImage().bind(galleryImage);
 	      });
 	    }
 	  }]);

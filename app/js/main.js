@@ -1,4 +1,4 @@
-import { loadJSON, imagePreloader } from './helper-functions';
+import { loadJSON, imagePreloader, chunker } from './helper-functions';
 import { GalleryImage } from './gallery/gallery-image';
 import { Gallery } from './gallery/gallery';
 
@@ -16,14 +16,13 @@ import { Gallery } from './gallery/gallery';
   imagePreloader(
     imageSourceArray,
     () => document.body.innerHTML = `
-    <section id="container"></section>
-    <button id="myButton" >Next Project</button>
+    <section id="widget">Loading...</section>
     `
   );
-  //preloading test
+
 
   //image test
-  const element  = document.getElementById("container");
+  const element  = document.getElementById("widget");
   const myButton  = document.getElementById("myButton");
 
   //Gallery test
@@ -32,5 +31,5 @@ import { Gallery } from './gallery/gallery';
 
   window.onload = function(event){
     console.log("window.onload");
-    gallery.initialize();
+    gallery.setEventListeners();
   };

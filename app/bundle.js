@@ -61,12 +61,11 @@
 	});
 	
 	(0, _helperFunctions.imagePreloader)(imageSourceArray, function () {
-	  return document.body.innerHTML = '\n    <section id="container"></section>\n    <button id="myButton" >Next Project</button>\n    ';
+	  return document.body.innerHTML = '\n    <section id="widget">Loading...</section>\n    ';
 	});
-	//preloading test
 	
 	//image test
-	var element = document.getElementById("container");
+	var element = document.getElementById("widget");
 	var myButton = document.getElementById("myButton");
 	
 	//Gallery test
@@ -74,7 +73,7 @@
 	
 	window.onload = function (event) {
 	  console.log("window.onload");
-	  gallery.initialize();
+	  gallery.setEventListeners();
 	};
 
 /***/ },
@@ -88,6 +87,7 @@
 	});
 	exports.loadJSON = loadJSON;
 	exports.imagePreloader = imagePreloader;
+	exports.chunker = chunker;
 	/**
 	* Loads JSON file into object.
 	*
@@ -113,6 +113,31 @@
 	  var images = new Image();
 	  images.src = array;
 	  if (callback) images.onLoad = callback();
+	}
+	
+	/**
+	* array chunker, creates an array of arrays
+	*
+	*
+	*/
+	function chunker(originalArray, size) {
+	  var array = [];
+	  var chunkArray = [];
+	
+	  console.log('Chunkin...');
+	
+	  originalArray.forEach(function (element) {
+	    array.push(element);
+	    console.log(array.length);
+	    if (array.length === size) {
+	      chunkArray.push(array);
+	      array = [];
+	    };
+	  });
+	
+	  if (array) chunkArray.push(array);
+	
+	  return chunkArray;
 	}
 
 /***/ },
@@ -144,11 +169,11 @@
 	    this.imgSource = source;
 	    this.imgDescription = description;
 	    this.position = position;
-	    this.template = '\n      <div class="img-wrap gallery-image-' + this.position + '">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
+	    this.template = '\n\n      <div id="courtain" style="display:none"></div>\n      <div id="popUpDiv" style="display:none">\n        <a href="#" onclick="popup(\'popUpDiv\')" >Click to Close CSS Pop Up</a>\n      </div>\n\n      <div class="gi-item gi-img-wrap gallery-image-' + this.position + '">\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n      </div>\n    ';
 	    this.renderAnimation = new TimelineLite();
 	    this.fadeAnimation = new TimelineLite();
 	    this.enlargeAnimation = new TimelineLite();
-	
+	    //        <img class="gi-thumbnail" name="${this.imgDescription}" src="${this.imgSource}">
 	    parentElement.innerHTML += this.template;
 	  }
 	
@@ -158,7 +183,7 @@
 	      var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 	      var description = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 	
-	      this.element.classList.remove("hidden");
+	      this.element.classList.remove("gi-hidden");
 	      this.imgDescription = description;
 	      this.element.children[1].src = source;
 	      this.element.children[1].name = description;
@@ -171,7 +196,7 @@
 	      var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x: 0, y: 0 };
 	
 	      console.log('Hello i\'m .gallery-image-' + this.position);
-	      this.element.classList.remove("hidden");
+	      this.element.classList.remove("gi-hidden");
 	      this.renderAnimation.from(this.element, 1, { opacity: 20, x: "-2000px", ease: Power0.easeNone }).from(this.element.children[1], 1, { ease: Power0.easeNone, transform: "rotateX(90deg)", transformOrigin: "left top", transformPerspective: 2 }, '0');
 	    }
 	  }, {
@@ -184,7 +209,7 @@
 	    key: 'hideImage',
 	    value: function hideImage() {
 	      console.log('I\'m outta here...');
-	      this.element.classList.add("hidden");
+	      this.element.classList.add("gi-hidden");
 	    }
 	  }, {
 	    key: 'restartAnimation',
@@ -200,7 +225,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -211,46 +236,67 @@
 	
 	var _galleryImage = __webpack_require__(2);
 	
+	var _helperFunctions = __webpack_require__(1);
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Gallery = exports.Gallery = function () {
-	  function Gallery(element) {
-	    var _this = this;
-	
+	  function Gallery(parentElement) {
 	    var arrayOfImages = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 	
 	    _classCallCheck(this, Gallery);
 	
-	    this.galleryImageArray = [];
-	    this.element = element;
-	    this.galleryImageArray = arrayOfImages.map(function (imageObject, index) {
-	      return new _galleryImage.GalleryImage(_this.element, index, imageObject.source, imageObject.descrption);
-	    });
+	    this.totalImages = arrayOfImages.length;
+	    this.galleryImageArray = (0, _helperFunctions.chunker)(arrayOfImages, 6);
+	    this.activeArray = {
+	      images: this.galleryImageArray[0],
+	      page: 0
+	    };
 	
-	    console.log(this.galleryImageArray);
+	    this.template = '\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> 1 / N </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
+	
+	    (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
+	      return imageObject.source;
+	    }, this.renderHtml(parentElement)));
 	  }
 	
 	  _createClass(Gallery, [{
-	    key: "initialize",
-	    value: function initialize() {
-	      this.galleryImageArray.forEach(function (galleryImage, index) {
-	
-	        var element = document.querySelector(".gallery-image-" + index);
-	
-	        element.children[0].addEventListener("click", function (event) {
-	          element.children[0].classList.add("hidden");
-	          element.children[1].classList.add("thumbnail");
-	          element.children[1].classList.remove("fullsize");
-	          event.stopPropagation();
-	        });
-	
-	        element.children[1].addEventListener("click", function (event) {
-	          element.children[0].classList.remove("hidden");
-	          element.children[1].classList.remove("thumbnail");
-	          element.children[1].classList.add("fullsize");
-	          event.stopPropagation();
-	        });
+	    key: 'renderHtml',
+	    value: function renderHtml(element) {
+	      element.innerHTML = this.template;
+	      this.galleryImageArray2 = this.activeArray.images.map(function (imageObject, index) {
+	        return new _galleryImage.GalleryImage(document.querySelector(".gi-container"), index, imageObject.source, imageObject.descrption);
 	      });
+	    }
+	  }, {
+	    key: 'updateHTML',
+	    value: function updateHTML() {
+	      document.querySelector(".gi-container").innerHTML = '';
+	      this.galleryImageArray2 = this.activeArray.images.map(function (imageObject, index) {
+	        return new _galleryImage.GalleryImage(document.querySelector(".gi-container"), index, imageObject.source, imageObject.descrption);
+	      });
+	    }
+	  }, {
+	    key: 'nextSet',
+	    value: function nextSet() {
+	      if (this.activeArray.page < this.galleryImageArray.length - 1) {
+	        this.activeArray.page += 1;
+	      } else {
+	        this.activeArray.page = 0;
+	      }
+	      this.activeArray.images = this.galleryImageArray[this.activeArray.page];
+	      console.log(this.activeArray);
+	      (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
+	        return imageObject.source;
+	      }));
+	
+	      this.updateHTML();
+	    }
+	  }, {
+	    key: 'setEventListeners',
+	    value: function setEventListeners() {
+	      //Set up listeners
+	      document.querySelector(".gi-button").onclick = this.nextSet.bind(this);
 	    }
 	  }]);
 

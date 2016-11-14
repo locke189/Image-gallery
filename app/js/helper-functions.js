@@ -26,4 +26,28 @@ export function imagePreloader(array, callback){
     images.onLoad = callback();
 }
 
+  /**
+  * array chunker, creates an array of arrays
+  *
+  *
+  */
+export function chunker(originalArray, size){
+  let array = [];
+  let chunkArray = [];
+
+  console.log('Chunkin...');
+
+  originalArray.forEach( (element) => {
+     array.push(element);
+     console.log(array.length);
+     if( array.length === size ){
+       chunkArray.push(array);
+       array = [];
+     };
+  });
+
+  if(array) chunkArray.push(array);
+
+  return chunkArray;
+}
 

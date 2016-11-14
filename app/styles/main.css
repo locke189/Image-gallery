@@ -8,24 +8,64 @@ body {
   top: 400px;
   left: 800px; }
 
-.hidden {
+.gi-hidden {
   display: none; }
 
-.thumbnail {
-  height: 300px;
-  width: 400px; }
+.gi-thumbnail {
+  height: 225px;
+  width: 300px; }
 
-.fullsize {
+.gi-fullsize {
   height: 100%;
   width: 100%; }
 
-.img-wrap {
+.gi-img-wrap {
   position: relative; }
 
-.img-wrap .close {
+.gi-img-wrap .gi-close {
   position: absolute;
   top: 2px;
   right: 8px;
   z-index: 100; }
+
+.gi-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center; }
+
+.gi-buttons-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center; }
+
+.gi-item {
+  margin: 5px;
+  flex-grow: 1;
+  flex-shrink: 2; }
+
+/*
+ Magnific popup
+*/
+.mfp-close {
+  font-size: 40px;
+  margin-bottom: 30px;
+  cursor: crosshair !important; }
+
+.mfp-close i {
+  cursor: pointer; }
+
+.popup-it, .popup-it:hover, .popup-it:focus {
+  color: #444;
+  text-decoration: none; }
+
+.popup-it:focus {
+  outline: none; }
+
+.mfp-zoom-out-cur {
+  cursor: crosshair !important; }
 
 /*# sourceMappingURL=main.css.map */

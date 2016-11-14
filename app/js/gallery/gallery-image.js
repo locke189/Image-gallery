@@ -9,7 +9,7 @@ export class GalleryImage{
     this.imgDescription = description;
     this.position = position;
     this.template = `
-      <div class="img-wrap gallery-image">
+      <div class="img-wrap gallery-image-${this.position}">
         <span class="close hidden">&times;</span>
         <img class="thumbnail" name="${this.imgDescription}" src="${this.imgSource}">
       </div>

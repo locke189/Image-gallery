@@ -144,7 +144,7 @@
 	    this.imgSource = source;
 	    this.imgDescription = description;
 	    this.position = position;
-	    this.template = '\n      <div class="img-wrap gallery-image">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
+	    this.template = '\n      <div class="img-wrap gallery-image-' + this.position + '">\n        <span class="close hidden">&times;</span>\n        <img class="thumbnail" name="' + this.imgDescription + '" src="' + this.imgSource + '">\n      </div>\n    ';
 	    this.renderAnimation = new TimelineLite();
 	    this.fadeAnimation = new TimelineLite();
 	    this.enlargeAnimation = new TimelineLite();
@@ -234,6 +234,7 @@
 	    key: "initialize",
 	    value: function initialize() {
 	      this.galleryImageArray.forEach(function (galleryImage, index) {
+	
 	        var element = document.querySelector(".gallery-image-" + index);
 	
 	        element.children[0].addEventListener("click", function (event) {
@@ -249,8 +250,6 @@
 	          element.children[1].classList.add("fullsize");
 	          event.stopPropagation();
 	        });
-	
-	        galleryImage.renderImage().bind(galleryImage);
 	      });
 	    }
 	  }]);

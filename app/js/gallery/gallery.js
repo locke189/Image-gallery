@@ -19,7 +19,9 @@ export class Gallery{
 
   initialize(){
     this.galleryImageArray.forEach((galleryImage,index) => {
+
       const element = document.querySelector(`.gallery-image-${index}`);
+
 
       element.children[0].addEventListener( "click", (event) => {
         element.children[0].classList.add("hidden");
@@ -34,8 +36,6 @@ export class Gallery{
         element.children[1].classList.add("fullsize");
         event.stopPropagation();
       });
-
-      galleryImage.renderImage().bind(galleryImage);
 
     });
   }

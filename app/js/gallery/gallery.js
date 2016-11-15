@@ -13,7 +13,7 @@ export class Gallery{
     this.template = `
      <section class="gi-container"></section>
      <section class="gi-buttons-container">
-       <span class="gi-pager"> 1 / N </span>
+       <span class="gi-pager"> ${ this.activeArray.page + 1 } / ${this.galleryImageArray.length } </span>
        <button class="gi-button">Next Project</button>
      </section>
     `;
@@ -22,6 +22,10 @@ export class Gallery{
       imageObject  => { return imageObject.source; },
       this.renderHtml(parentElement) )
     );
+  }
+
+  initialize(){
+
   }
 
   renderHtml(element){
@@ -34,6 +38,7 @@ export class Gallery{
         imageObject.descrption
       );
     });
+    this.animateLoading();
   }
 
   updateHTML(){
@@ -46,9 +51,18 @@ export class Gallery{
         imageObject.descrption
       );
     });
+    this.animateLoading();
+    document.querySelector(".gi-pager").innerHTML = `${ this.activeArray.page + 1 } / ${this.galleryImageArray.length }`;
   }
 
+  animateLoading(){
+    let imageContainers = document.querySelectorAll(".gi-item");
+    const images = document.querySelectorAll(".gi-thumbnail");
+    console.log('Animating...');
+    let t1 = new TimelineLite();
+    t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger");
 
+  }
 
   nextSet(){
     if (this.activeArray.page < this.galleryImageArray.length - 1){
@@ -59,13 +73,29 @@ export class Gallery{
     this.activeArray.images = this.galleryImageArray[this.activeArray.page];
     console.log(this.activeArray);
     imagePreloader( this.activeArray.images.map( imageObject  => { return imageObject.source; } ) );
-
     this.updateHTML();
+    this.setEventListeners();
+  }
+
+  setAnimationTo(element,time,CSSObject){
+    return () => {
+      console.log(element);
+      let t1 = new TimelineLite();
+      t1.to(element,time,CSSObject);
+    };
   }
 
   setEventListeners(){
-    //Set up listeners
-    document.querySelector(".gi-button").onclick = this.nextSet.bind(this) ;
+    //Set up listeners   this.nextSet.bind(this)
+    let giButton = document.querySelector(".gi-button");
+    giButton.onclick = this.setAnimationTo(document.querySelectorAll(".gi-item"),0.2,{opacity:0, ease: Power0.easeNone, onComplete: this.nextSet.bind(this)});
+
+    document.querySelectorAll(".gi-img-text").forEach(  (element) => {
+      console.log('this is working');
+      element.onmouseenter = this.setAnimationTo(element,0.2,{opacity:0.8, ease: Power0.easeNone});
+      element.onmouseleave = this.setAnimationTo(element,0.2,{opacity:0, ease: Power0.easeNone});
+    });
+
   }
 
 

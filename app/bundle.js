@@ -73,6 +73,7 @@
 	
 	window.onload = function (event) {
 	  console.log("window.onload");
+	  gallery.initialize();
 	  gallery.setEventListeners();
 	};
 
@@ -111,8 +112,10 @@
 	*/
 	function imagePreloader(array, callback) {
 	  var images = new Image();
-	  images.src = array;
+	
 	  if (callback) images.onLoad = callback();
+	
+	  images.src = array;
 	}
 	
 	/**
@@ -150,8 +153,6 @@
 	  value: true
 	});
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	/**
@@ -159,67 +160,19 @@
 	*
 	*
 	*/
-	var GalleryImage = exports.GalleryImage = function () {
-	  function GalleryImage(parentElement, position) {
-	    var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-	    var description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+	var GalleryImage = exports.GalleryImage = function GalleryImage(parentElement, position) {
+	  var source = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+	  var description = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
 	
-	    _classCallCheck(this, GalleryImage);
+	  _classCallCheck(this, GalleryImage);
 	
-	    this.imgSource = source;
-	    this.imgDescription = description;
-	    this.position = position;
-	    this.template = '\n\n      <div id="courtain" style="display:none"></div>\n      <div id="popUpDiv" style="display:none">\n        <a href="#" onclick="popup(\'popUpDiv\')" >Click to Close CSS Pop Up</a>\n      </div>\n\n      <div class="gi-item gi-img-wrap gallery-image-' + this.position + '">\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n      </div>\n    ';
-	    this.renderAnimation = new TimelineLite();
-	    this.fadeAnimation = new TimelineLite();
-	    this.enlargeAnimation = new TimelineLite();
-	    //        <img class="gi-thumbnail" name="${this.imgDescription}" src="${this.imgSource}">
-	    parentElement.innerHTML += this.template;
-	  }
+	  this.imgSource = source;
+	  this.imgDescription = description;
+	  this.position = position;
+	  this.template = '\n\n      <div id="courtain" style="display:none"></div>\n      <div id="popUpDiv" style="display:none">\n        <a href="#" onclick="popup(\'popUpDiv\')" >Click to Close CSS Pop Up</a>\n      </div>\n\n      <div class="gi-item gi-img-wrap ">\n\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n        <div class="gi-img-text"><h4>' + this.imgDescription + '<h4></div>\n      </div>\n    ';
 	
-	  _createClass(GalleryImage, [{
-	    key: 'changeImage',
-	    value: function changeImage() {
-	      var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-	      var description = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-	
-	      this.element.classList.remove("gi-hidden");
-	      this.imgDescription = description;
-	      this.element.children[1].src = source;
-	      this.element.children[1].name = description;
-	      console.log(this);
-	      this.restartAnimation();
-	    }
-	  }, {
-	    key: 'renderImage',
-	    value: function renderImage() {
-	      var position = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x: 0, y: 0 };
-	
-	      console.log('Hello i\'m .gallery-image-' + this.position);
-	      this.element.classList.remove("gi-hidden");
-	      this.renderAnimation.from(this.element, 1, { opacity: 20, x: "-2000px", ease: Power0.easeNone }).from(this.element.children[1], 1, { ease: Power0.easeNone, transform: "rotateX(90deg)", transformOrigin: "left top", transformPerspective: 2 }, '0');
-	    }
-	  }, {
-	    key: 'fadeImage',
-	    value: function fadeImage() {
-	      console.log('Hasta la Vista .gallery-image-' + this.position);
-	      this.fadeAnimation.to(this.element, 0.2, { opacity: 0, onComplete: this.hideImage.bind(this) });
-	    }
-	  }, {
-	    key: 'hideImage',
-	    value: function hideImage() {
-	      console.log('I\'m outta here...');
-	      this.element.classList.add("gi-hidden");
-	    }
-	  }, {
-	    key: 'restartAnimation',
-	    value: function restartAnimation() {
-	      this.renderAnimation.restart();
-	    }
-	  }]);
-
-	  return GalleryImage;
-	}();
+	  parentElement.innerHTML += this.template;
+	};
 
 /***/ },
 /* 3 */
@@ -253,7 +206,7 @@
 	      page: 0
 	    };
 	
-	    this.template = '\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> 1 / N </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
+	    this.template = '\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> ' + (this.activeArray.page + 1) + ' / ' + this.galleryImageArray.length + ' </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
 	
 	    (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
 	      return imageObject.source;
@@ -261,12 +214,16 @@
 	  }
 	
 	  _createClass(Gallery, [{
+	    key: 'initialize',
+	    value: function initialize() {}
+	  }, {
 	    key: 'renderHtml',
 	    value: function renderHtml(element) {
 	      element.innerHTML = this.template;
 	      this.galleryImageArray2 = this.activeArray.images.map(function (imageObject, index) {
 	        return new _galleryImage.GalleryImage(document.querySelector(".gi-container"), index, imageObject.source, imageObject.descrption);
 	      });
+	      this.animateLoading();
 	    }
 	  }, {
 	    key: 'updateHTML',
@@ -275,6 +232,17 @@
 	      this.galleryImageArray2 = this.activeArray.images.map(function (imageObject, index) {
 	        return new _galleryImage.GalleryImage(document.querySelector(".gi-container"), index, imageObject.source, imageObject.descrption);
 	      });
+	      this.animateLoading();
+	      document.querySelector(".gi-pager").innerHTML = this.activeArray.page + 1 + ' / ' + this.galleryImageArray.length;
+	    }
+	  }, {
+	    key: 'animateLoading',
+	    value: function animateLoading() {
+	      var imageContainers = document.querySelectorAll(".gi-item");
+	      var images = document.querySelectorAll(".gi-thumbnail");
+	      console.log('Animating...');
+	      var t1 = new TimelineLite();
+	      t1.staggerFrom(imageContainers, 1, { opacity: 0, x: "-1000", ease: Power0.easeNone }, -0.3, "stagger");
 	    }
 	  }, {
 	    key: 'nextSet',
@@ -289,14 +257,32 @@
 	      (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
 	        return imageObject.source;
 	      }));
-	
 	      this.updateHTML();
+	      this.setEventListeners();
+	    }
+	  }, {
+	    key: 'setAnimationTo',
+	    value: function setAnimationTo(element, time, CSSObject) {
+	      return function () {
+	        console.log(element);
+	        var t1 = new TimelineLite();
+	        t1.to(element, time, CSSObject);
+	      };
 	    }
 	  }, {
 	    key: 'setEventListeners',
 	    value: function setEventListeners() {
-	      //Set up listeners
-	      document.querySelector(".gi-button").onclick = this.nextSet.bind(this);
+	      var _this = this;
+	
+	      //Set up listeners   this.nextSet.bind(this)
+	      var giButton = document.querySelector(".gi-button");
+	      giButton.onclick = this.setAnimationTo(document.querySelectorAll(".gi-item"), 0.2, { opacity: 0, ease: Power0.easeNone, onComplete: this.nextSet.bind(this) });
+	
+	      document.querySelectorAll(".gi-img-text").forEach(function (element) {
+	        console.log('this is working');
+	        element.onmouseenter = _this.setAnimationTo(element, 0.2, { opacity: 0.8, ease: Power0.easeNone });
+	        element.onmouseleave = _this.setAnimationTo(element, 0.2, { opacity: 0, ease: Power0.easeNone });
+	      });
 	    }
 	  }]);
 

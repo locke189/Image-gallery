@@ -47,25 +47,16 @@ body {
   flex-grow: 1;
   flex-shrink: 2; }
 
-/*
- Magnific popup
-*/
-.mfp-close {
-  font-size: 40px;
-  margin-bottom: 30px;
-  cursor: crosshair !important; }
-
-.mfp-close i {
-  cursor: pointer; }
-
-.popup-it, .popup-it:hover, .popup-it:focus {
-  color: #444;
-  text-decoration: none; }
-
-.popup-it:focus {
-  outline: none; }
-
-.mfp-zoom-out-cur {
-  cursor: crosshair !important; }
+.gi-img-text {
+  margin: 0 0 0 0;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 225px;
+  width: 300px;
+  opacity: 0;
+  text-align: center;
+  color: white;
+  background-color: black; }
 
 /*# sourceMappingURL=main.css.map */

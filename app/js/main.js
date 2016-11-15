@@ -31,5 +31,6 @@ import { Gallery } from './gallery/gallery';
 
   window.onload = function(event){
     console.log("window.onload");
+    gallery.initialize();
     gallery.setEventListeners();
   };

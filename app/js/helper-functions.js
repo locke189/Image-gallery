@@ -21,9 +21,11 @@ export function loadJSON(url){
   */
 export function imagePreloader(array, callback){
   const images = new Image();
-  images.src = array;
+
   if(callback)
     images.onLoad = callback();
+
+  images.src = array;
 }
 
   /**

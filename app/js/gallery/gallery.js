@@ -11,6 +11,13 @@ export class Gallery{
     };
 
     this.template = `
+
+      <div id="gi-mask"  class="gi-popup"style="display:none"></div>
+      <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">
+        <span class="gi-close">&times;</span>
+        <img src="http://placehold.it/350x250/ff0000?text=Image1" class="gi-fullsize" alt="">
+      </div>
+
      <section class="gi-container"></section>
      <section class="gi-buttons-container">
        <span class="gi-pager"> ${ this.activeArray.page + 1 } / ${this.galleryImageArray.length } </span>
@@ -79,7 +86,6 @@ export class Gallery{
 
   setAnimationTo(element,time,CSSObject){
     return () => {
-      console.log(element);
       let t1 = new TimelineLite();
       t1.to(element,time,CSSObject);
     };
@@ -96,7 +102,59 @@ export class Gallery{
       element.onmouseleave = this.setAnimationTo(element,0.2,{opacity:0, ease: Power0.easeNone});
     });
 
+    document.querySelectorAll(".gi-item").forEach(  (element) => {
+          console.log('this is working');
+      //element.onclick = this.setAnimationTo(document.getElementById("gi-mask"),0.2,{opacity:0.65, ease: Power0.easeNone});
+      element.onclick = this.togglePopUp;
+    });
+
+
+    let giButtonClose = document.querySelector(".gi-close");
+    giButtonClose.onclick = this.togglePopUp;
+
+
+    window.onresize = this.positionPopup;
+
   }
 
+  positionPopup(){
+      let popup = document.getElementById("gi-popUpDiv");
+      popup.style.top =  (document.documentElement.clientHeight/2-200) + 'px';
+      popup.style.left = (document.body.parentNode.clientWidth/2-200) + 'px';
+  }
+
+
+  togglePopUp(){
+    let mask = document.getElementById("gi-mask");
+    let popup = document.getElementById("gi-popUpDiv");
+    let t1 = new TimelineLite();
+    console.log(mask);
+
+    if ( mask.style.display === 'none' ) {
+      mask.style.display = 'block';
+      popup.style.display = 'block';
+      popup.style.top =  (document.documentElement.clientHeight/2-200) + 'px';
+      popup.style.left = (document.body.parentNode.clientWidth/2-200) + 'px';
+      t1.to(mask,0.2,{opacity:0.8, ease: Power0.easeNone}).
+        to(popup,0.2,{opacity:1, ease: Power0.easeNone});
+    }else {
+
+      t1.to(mask,0.2,{opacity:0, ease: Power0.easeNone, onComplete: () => {
+        mask.style.display = 'none';
+        popup.style.display = 'none';
+      }}).to(popup,0.2,{opacity:0, ease: Power0.easeNone});
+
+
+
+    }
+
+  }
+
+  popUpAnimationOn(){
+
+    this.togglePopUp();
+
+
+  }
 
 }

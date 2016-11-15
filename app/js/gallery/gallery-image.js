@@ -1,5 +1,5 @@
   /**
-  * GalleryImage class.
+  * GalleryImage
   *
   *
   */
@@ -9,11 +9,6 @@ export class GalleryImage{
     this.imgDescription = description;
     this.position = position;
     this.template = `
-
-      <div id="courtain" style="display:none"></div>
-      <div id="popUpDiv" style="display:none">
-        <a href="#" onclick="popup('popUpDiv')" >Click to Close CSS Pop Up</a>
-      </div>
 
       <div class="gi-item gi-img-wrap ">
 

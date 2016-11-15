@@ -156,7 +156,7 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	/**
-	* GalleryImage class.
+	* GalleryImage
 	*
 	*
 	*/
@@ -169,7 +169,7 @@
 	  this.imgSource = source;
 	  this.imgDescription = description;
 	  this.position = position;
-	  this.template = '\n\n      <div id="courtain" style="display:none"></div>\n      <div id="popUpDiv" style="display:none">\n        <a href="#" onclick="popup(\'popUpDiv\')" >Click to Close CSS Pop Up</a>\n      </div>\n\n      <div class="gi-item gi-img-wrap ">\n\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n        <div class="gi-img-text"><h4>' + this.imgDescription + '<h4></div>\n      </div>\n    ';
+	  this.template = '\n\n      <div class="gi-item gi-img-wrap ">\n\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n        <div class="gi-img-text"><h4>' + this.imgDescription + '<h4></div>\n      </div>\n    ';
 	
 	  parentElement.innerHTML += this.template;
 	};
@@ -206,7 +206,7 @@
 	      page: 0
 	    };
 	
-	    this.template = '\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> ' + (this.activeArray.page + 1) + ' / ' + this.galleryImageArray.length + ' </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
+	    this.template = '\n\n      <div id="gi-mask"  class="gi-popup"style="display:none"></div>\n      <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">\n        <span class="gi-close">&times;</span>\n        <img src="http://placehold.it/350x250/ff0000?text=Image1" class="gi-fullsize" alt="">\n      </div>\n\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> ' + (this.activeArray.page + 1) + ' / ' + this.galleryImageArray.length + ' </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
 	
 	    (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
 	      return imageObject.source;
@@ -264,7 +264,6 @@
 	    key: 'setAnimationTo',
 	    value: function setAnimationTo(element, time, CSSObject) {
 	      return function () {
-	        console.log(element);
 	        var t1 = new TimelineLite();
 	        t1.to(element, time, CSSObject);
 	      };
@@ -283,6 +282,52 @@
 	        element.onmouseenter = _this.setAnimationTo(element, 0.2, { opacity: 0.8, ease: Power0.easeNone });
 	        element.onmouseleave = _this.setAnimationTo(element, 0.2, { opacity: 0, ease: Power0.easeNone });
 	      });
+	
+	      document.querySelectorAll(".gi-item").forEach(function (element) {
+	        console.log('this is working');
+	        //element.onclick = this.setAnimationTo(document.getElementById("gi-mask"),0.2,{opacity:0.65, ease: Power0.easeNone});
+	        element.onclick = _this.togglePopUp;
+	      });
+	
+	      var giButtonClose = document.querySelector(".gi-close");
+	      giButtonClose.onclick = this.togglePopUp;
+	
+	      window.onresize = this.positionPopup;
+	    }
+	  }, {
+	    key: 'positionPopup',
+	    value: function positionPopup() {
+	      var popup = document.getElementById("gi-popUpDiv");
+	      popup.style.top = document.documentElement.clientHeight / 2 - 200 + 'px';
+	      popup.style.left = document.body.parentNode.clientWidth / 2 - 200 + 'px';
+	    }
+	  }, {
+	    key: 'togglePopUp',
+	    value: function togglePopUp() {
+	      var mask = document.getElementById("gi-mask");
+	      var popup = document.getElementById("gi-popUpDiv");
+	      var t1 = new TimelineLite();
+	      console.log(mask);
+	
+	      if (mask.style.display === 'none') {
+	        mask.style.display = 'block';
+	        popup.style.display = 'block';
+	        popup.style.top = document.documentElement.clientHeight / 2 - 200 + 'px';
+	        popup.style.left = document.body.parentNode.clientWidth / 2 - 200 + 'px';
+	        t1.to(mask, 0.2, { opacity: 0.8, ease: Power0.easeNone }).to(popup, 0.2, { opacity: 1, ease: Power0.easeNone });
+	      } else {
+	
+	        t1.to(mask, 0.2, { opacity: 0, ease: Power0.easeNone, onComplete: function onComplete() {
+	            mask.style.display = 'none';
+	            popup.style.display = 'none';
+	          } }).to(popup, 0.2, { opacity: 0, ease: Power0.easeNone });
+	      }
+	    }
+	  }, {
+	    key: 'popUpAnimationOn',
+	    value: function popUpAnimationOn() {
+	
+	      this.togglePopUp();
 	    }
 	  }]);
 

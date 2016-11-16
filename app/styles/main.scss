@@ -17,8 +17,10 @@ body {
 }
 
 .gi-thumbnail{
-    height: 225px;
-    width: 300px;
+  height: auto;
+  display: inline-block;
+  max-width: 300px;
+
 }
 
 .gi-fullsize{
@@ -45,6 +47,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
+
 }
 .gi-buttons-container{
     display: flex;
@@ -55,8 +58,8 @@ body {
 }
 .gi-item{
   margin: 5px;
-  flex-grow: 1;
-  flex-shrink: 2;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 

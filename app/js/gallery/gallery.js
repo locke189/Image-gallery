@@ -64,7 +64,6 @@ export class Gallery{
 
   animateLoading(){
     let imageContainers = document.querySelectorAll(".gi-item");
-    const images = document.querySelectorAll(".gi-thumbnail");
     console.log('Animating...');
     let t1 = new TimelineLite();
     t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger");
@@ -105,7 +104,7 @@ export class Gallery{
     document.querySelectorAll(".gi-item").forEach(  (element) => {
           console.log('this is working');
       //element.onclick = this.setAnimationTo(document.getElementById("gi-mask"),0.2,{opacity:0.65, ease: Power0.easeNone});
-      element.onclick = this.togglePopUp;
+      element.onclick = this.popUpOn(element);
     });
 
 
@@ -118,9 +117,13 @@ export class Gallery{
   }
 
   positionPopup(){
-      let popup = document.getElementById("gi-popUpDiv");
-      popup.style.top =  (document.documentElement.clientHeight/2-200) + 'px';
-      popup.style.left = (document.body.parentNode.clientWidth/2-200) + 'px';
+      const popup = document.getElementById("gi-popUpDiv");
+      const imgWidth = document.querySelector(".gi-fullsize").width;
+      const imgHeight = document.querySelector(".gi-fullsize").height;
+      console.log(`X = ${imgWidth} clientWidth = ${document.body.parentNode.clientWidth}`);
+      console.log(`Y = ${imgHeight} clientHeight = ${document.documentElement.clientHeight}`);
+      popup.style.top =  ((document.documentElement.clientHeight-imgHeight)/2) + 'px';
+      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
   }
 
 
@@ -128,13 +131,15 @@ export class Gallery{
     let mask = document.getElementById("gi-mask");
     let popup = document.getElementById("gi-popUpDiv");
     let t1 = new TimelineLite();
+    const imgWidth = document.querySelector(".gi-fullsize").width;
+    const imgHeigth = document.querySelector(".gi-fullsize").heigth;
     console.log(mask);
 
     if ( mask.style.display === 'none' ) {
       mask.style.display = 'block';
       popup.style.display = 'block';
-      popup.style.top =  (document.documentElement.clientHeight/2-200) + 'px';
-      popup.style.left = (document.body.parentNode.clientWidth/2-200) + 'px';
+      popup.style.top =  ((document.documentElement.clientHeight-imgHeigth)/2) + 'px';
+      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
       t1.to(mask,0.2,{opacity:0.8, ease: Power0.easeNone}).
         to(popup,0.2,{opacity:1, ease: Power0.easeNone});
     }else {
@@ -144,9 +149,29 @@ export class Gallery{
         popup.style.display = 'none';
       }}).to(popup,0.2,{opacity:0, ease: Power0.easeNone});
 
-
-
     }
+
+  }
+
+  popUpOn(element){
+    return () => {
+      let mask = document.getElementById("gi-mask");
+      let popup = document.getElementById("gi-popUpDiv");
+      let t1 = new TimelineLite();
+
+      document.querySelector(".gi-fullsize").src = element.children[1].children[0].src;
+
+      const imgWidth = document.querySelector(".gi-fullsize").width;
+      const imgHeight = document.querySelector(".gi-fullsize").height;
+      mask.style.display = 'block';
+      popup.style.display = 'block';
+      console.log(`X = ${imgWidth} clientWidth = ${document.body.parentNode.clientWidth}`);
+      console.log(`Y = ${imgHeight} clientHeight = ${document.documentElement.clientHeight}`);
+      popup.style.top =  ((document.documentElement.clientHeight-imgHeight)/2) + 'px';
+      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
+      t1.to(mask,0.2,{opacity:0.8, ease: Power0.easeNone}).
+      to(popup,0.2,{opacity:1, ease: Power0.easeNone});
+    };
 
   }
 

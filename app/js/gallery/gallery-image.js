@@ -13,7 +13,7 @@ export class GalleryImage{
       <div class="gi-item gi-img-wrap ">
 
         <span class="gi-close gi-hidden">&times;</span>
-        <a href="${this.imgSource}" class="mfp-iframe popup-it">
+        <a href="#" class="mfp-iframe popup-it">
           <img src="${this.imgSource}" class="gi-thumbnail img-responsive" alt="${this.imgDescription}">
         </a>
         <div class="gi-img-text"><h4>${this.imgDescription}<h4></div>

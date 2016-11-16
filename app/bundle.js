@@ -169,7 +169,7 @@
 	  this.imgSource = source;
 	  this.imgDescription = description;
 	  this.position = position;
-	  this.template = '\n\n      <div class="gi-item gi-img-wrap ">\n\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="' + this.imgSource + '" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n        <div class="gi-img-text"><h4>' + this.imgDescription + '<h4></div>\n      </div>\n    ';
+	  this.template = '\n\n      <div class="gi-item gi-img-wrap ">\n\n        <span class="gi-close gi-hidden">&times;</span>\n        <a href="#" class="mfp-iframe popup-it">\n          <img src="' + this.imgSource + '" class="gi-thumbnail img-responsive" alt="' + this.imgDescription + '">\n        </a>\n        <div class="gi-img-text"><h4>' + this.imgDescription + '<h4></div>\n      </div>\n    ';
 	
 	  parentElement.innerHTML += this.template;
 	};
@@ -239,7 +239,6 @@
 	    key: 'animateLoading',
 	    value: function animateLoading() {
 	      var imageContainers = document.querySelectorAll(".gi-item");
-	      var images = document.querySelectorAll(".gi-thumbnail");
 	      console.log('Animating...');
 	      var t1 = new TimelineLite();
 	      t1.staggerFrom(imageContainers, 1, { opacity: 0, x: "-1000", ease: Power0.easeNone }, -0.3, "stagger");
@@ -286,7 +285,7 @@
 	      document.querySelectorAll(".gi-item").forEach(function (element) {
 	        console.log('this is working');
 	        //element.onclick = this.setAnimationTo(document.getElementById("gi-mask"),0.2,{opacity:0.65, ease: Power0.easeNone});
-	        element.onclick = _this.togglePopUp;
+	        element.onclick = _this.popUpOn(element);
 	      });
 	
 	      var giButtonClose = document.querySelector(".gi-close");
@@ -298,8 +297,12 @@
 	    key: 'positionPopup',
 	    value: function positionPopup() {
 	      var popup = document.getElementById("gi-popUpDiv");
-	      popup.style.top = document.documentElement.clientHeight / 2 - 200 + 'px';
-	      popup.style.left = document.body.parentNode.clientWidth / 2 - 200 + 'px';
+	      var imgWidth = document.querySelector(".gi-fullsize").width;
+	      var imgHeight = document.querySelector(".gi-fullsize").height;
+	      console.log('X = ' + imgWidth + ' clientWidth = ' + document.body.parentNode.clientWidth);
+	      console.log('Y = ' + imgHeight + ' clientHeight = ' + document.documentElement.clientHeight);
+	      popup.style.top = (document.documentElement.clientHeight - imgHeight) / 2 + 'px';
+	      popup.style.left = (document.body.parentNode.clientWidth - imgWidth) / 2 + 'px';
 	    }
 	  }, {
 	    key: 'togglePopUp',
@@ -307,13 +310,15 @@
 	      var mask = document.getElementById("gi-mask");
 	      var popup = document.getElementById("gi-popUpDiv");
 	      var t1 = new TimelineLite();
+	      var imgWidth = document.querySelector(".gi-fullsize").width;
+	      var imgHeigth = document.querySelector(".gi-fullsize").heigth;
 	      console.log(mask);
 	
 	      if (mask.style.display === 'none') {
 	        mask.style.display = 'block';
 	        popup.style.display = 'block';
-	        popup.style.top = document.documentElement.clientHeight / 2 - 200 + 'px';
-	        popup.style.left = document.body.parentNode.clientWidth / 2 - 200 + 'px';
+	        popup.style.top = (document.documentElement.clientHeight - imgHeigth) / 2 + 'px';
+	        popup.style.left = (document.body.parentNode.clientWidth - imgWidth) / 2 + 'px';
 	        t1.to(mask, 0.2, { opacity: 0.8, ease: Power0.easeNone }).to(popup, 0.2, { opacity: 1, ease: Power0.easeNone });
 	      } else {
 	
@@ -322,6 +327,27 @@
 	            popup.style.display = 'none';
 	          } }).to(popup, 0.2, { opacity: 0, ease: Power0.easeNone });
 	      }
+	    }
+	  }, {
+	    key: 'popUpOn',
+	    value: function popUpOn(element) {
+	      return function () {
+	        var mask = document.getElementById("gi-mask");
+	        var popup = document.getElementById("gi-popUpDiv");
+	        var t1 = new TimelineLite();
+	
+	        document.querySelector(".gi-fullsize").src = element.children[1].children[0].src;
+	
+	        var imgWidth = document.querySelector(".gi-fullsize").width;
+	        var imgHeight = document.querySelector(".gi-fullsize").height;
+	        mask.style.display = 'block';
+	        popup.style.display = 'block';
+	        console.log('X = ' + imgWidth + ' clientWidth = ' + document.body.parentNode.clientWidth);
+	        console.log('Y = ' + imgHeight + ' clientHeight = ' + document.documentElement.clientHeight);
+	        popup.style.top = (document.documentElement.clientHeight - imgHeight) / 2 + 'px';
+	        popup.style.left = (document.body.parentNode.clientWidth - imgWidth) / 2 + 'px';
+	        t1.to(mask, 0.2, { opacity: 0.8, ease: Power0.easeNone }).to(popup, 0.2, { opacity: 1, ease: Power0.easeNone });
+	      };
 	    }
 	  }, {
 	    key: 'popUpAnimationOn',

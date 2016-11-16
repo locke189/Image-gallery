@@ -12,8 +12,9 @@ body {
   display: none; }
 
 .gi-thumbnail {
-  height: 225px;
-  width: 300px; }
+  height: auto;
+  display: inline-block;
+  max-width: 300px; }
 
 .gi-fullsize {
   height: 100%;
@@ -44,8 +45,8 @@ body {
 
 .gi-item {
   margin: 5px;
-  flex-grow: 1;
-  flex-shrink: 2; }
+  flex-grow: 0;
+  flex-shrink: 0; }
 
 .gi-img-text {
   margin: 0 0 0 0;

@@ -1,7 +1,7 @@
 body {
-  background: #D3F0FF;
-  font-family: 'Arial', sans-serif;
-  font-size: 2em; }
+  background: #FFFFFF;
+  font-size: 20px;
+  font-family: helvetica; }
 
 .pos {
   position: relative;
@@ -17,7 +17,7 @@ body {
   max-width: 300px; }
 
 .gi-fullsize {
-  height: 100%;
+  height: auto;
   width: 100%; }
 
 .gi-img-wrap {
@@ -41,14 +41,38 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-content: center; }
+  align-content: center;
+  padding-left: 10%;
+  padding-right: 10%; }
 
 .gi-item {
   margin: 5px;
   flex-grow: 0;
   flex-shrink: 0; }
 
+.gi-pager {
+  font-size: 20px;
+  font-family: helvetica; }
+
+.gi-button {
+  color: black;
+  font-size: 20px;
+  font-family: helvetica;
+  text-decoration: none;
+  border: 2px solid black;
+  border-radius: 20px;
+  transition-duration: .2s;
+  background-color: white;
+  padding: 4px 30px; }
+
+.gi-button:hover {
+  color: white;
+  background-color: black;
+  transition-duration: .2s; }
+
 .gi-img-text {
+  font-size: 20px;
+  font-family: helvetica;
   margin: 0 0 0 0;
   position: absolute;
   top: 0px;

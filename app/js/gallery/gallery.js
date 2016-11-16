@@ -31,10 +31,6 @@ export class Gallery{
     );
   }
 
-  initialize(){
-
-  }
-
   renderHtml(element){
     element.innerHTML = this.template;
     this.galleryImageArray2 = this.activeArray.images.map((imageObject,index) => {
@@ -46,6 +42,7 @@ export class Gallery{
       );
     });
     this.animateLoading();
+    this.setEventListeners();
   }
 
   updateHTML(){
@@ -63,7 +60,8 @@ export class Gallery{
   }
 
   animateLoading(){
-    let imageContainers = document.querySelectorAll(".gi-item");
+    const imageContainers = document.querySelectorAll(".gi-item");
+
     console.log('Animating...');
     let t1 = new TimelineLite();
     t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger");

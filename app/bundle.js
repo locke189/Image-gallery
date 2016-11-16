@@ -73,7 +73,6 @@
 	
 	window.onload = function (event) {
 	  console.log("window.onload");
-	  gallery.initialize();
 	  gallery.setEventListeners();
 	};
 
@@ -214,9 +213,6 @@
 	  }
 	
 	  _createClass(Gallery, [{
-	    key: 'initialize',
-	    value: function initialize() {}
-	  }, {
 	    key: 'renderHtml',
 	    value: function renderHtml(element) {
 	      element.innerHTML = this.template;
@@ -224,6 +220,7 @@
 	        return new _galleryImage.GalleryImage(document.querySelector(".gi-container"), index, imageObject.source, imageObject.descrption);
 	      });
 	      this.animateLoading();
+	      this.setEventListeners();
 	    }
 	  }, {
 	    key: 'updateHTML',
@@ -239,6 +236,7 @@
 	    key: 'animateLoading',
 	    value: function animateLoading() {
 	      var imageContainers = document.querySelectorAll(".gi-item");
+	
 	      console.log('Animating...');
 	      var t1 = new TimelineLite();
 	      t1.staggerFrom(imageContainers, 1, { opacity: 0, x: "-1000", ease: Power0.easeNone }, -0.3, "stagger");

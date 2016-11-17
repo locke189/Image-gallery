@@ -1,5 +1,4 @@
-import { loadJSON, imagePreloader, chunker } from './helper-functions';
-import { GalleryImage } from './gallery/gallery-image';
+import { loadJSON } from './helper-functions';
 import { Gallery } from './gallery/gallery';
 
 
@@ -8,27 +7,9 @@ import { Gallery } from './gallery/gallery';
   //get JSON
   const file = loadJSON('./model/images.json');
 
-  //Preloading
-  const imageSourceArray = file.images.map((element) => {
-      return element.source;
-  });
 
-  imagePreloader(
-    imageSourceArray,
-    () => document.body.innerHTML = `
-    <section id="widget">Loading...</section>
-    `
-  );
-
-
-  //image test
+  //Set Gallery
   const element  = document.getElementById("widget");
-
-  //Gallery test
   const gallery = new Gallery(element, file.images,6);
 
 
-  window.onload = function(event){
-    console.log("window.onload");
-    gallery.setEventListeners();
-  };

@@ -27,23 +27,6 @@ export class Gallery{
      </section>
     `;
 
-
-/** WORKING TEMPLATE
-    this.template = `
-
-      <div id="gi-mask"  class="gi-popup"style="display:none"></div>
-      <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">
-        <span class="gi-close">&times;</span>
-        <img src="http://placehold.it/350x250/ff0000?text=Image1" class="gi-fullsize" alt="">
-      </div>
-
-     <section class="gi-container"></section>
-     <section class="gi-buttons-container">
-       <span class="gi-pager"> ${ this.activeArray.page + 1 } / ${this.galleryImageArray.length } </span>
-       <button class="gi-button">Next Project</button>
-     </section>
-    `;
-**/
     imagePreloader( this.activeArray.images.map(
       imageObject  => { return imageObject.source; },
       this.renderHtml(parentElement) )
@@ -121,8 +104,6 @@ export class Gallery{
 
     let giButtonClose = document.querySelector(".gi-closebutton");
     giButtonClose.onclick = popUpClose;
-
-    window.onresize = positionPopup;
 
   }
 

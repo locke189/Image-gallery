@@ -17,8 +17,9 @@ body {
   max-width: 300px; }
 
 .gi-fullsize {
-  height: auto;
-  width: auto; }
+  display: inline-block;
+  max-height: 100%;
+  max-width: 100%; }
 
 .gi-img-wrap {
   position: relative; }

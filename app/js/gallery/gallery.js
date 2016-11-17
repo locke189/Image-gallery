@@ -13,6 +13,24 @@ export class Gallery{
 
     this.template = `
 
+    <div id="gi-popup" class="gi-overlay">
+        <a href="#" class="gi-closebutton" >&times;</a>
+        <div class="gi-overlay-content">
+          <img src="" class="gi-fullsize" alt="">
+        </div>
+    </div>
+
+     <section class="gi-container"></section>
+     <section class="gi-buttons-container">
+       <span class="gi-pager"> ${ this.activeArray.page + 1 } / ${this.galleryImageArray.length } </span>
+       <button class="gi-button">Next Project</button>
+     </section>
+    `;
+
+
+/** WORKING TEMPLATE
+    this.template = `
+
       <div id="gi-mask"  class="gi-popup"style="display:none"></div>
       <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">
         <span class="gi-close">&times;</span>
@@ -25,7 +43,7 @@ export class Gallery{
        <button class="gi-button">Next Project</button>
      </section>
     `;
-
+**/
     imagePreloader( this.activeArray.images.map(
       imageObject  => { return imageObject.source; },
       this.renderHtml(parentElement) )
@@ -34,7 +52,7 @@ export class Gallery{
 
   renderHtml(element){
     element.innerHTML = this.template;
-    this.activeArray.images.forEach((imageObject,index) => {
+    this.activeArray.images.forEach((imageObject) => {
         galleryImage(
         document.querySelector(".gi-container"),
         imageObject.source,
@@ -47,7 +65,7 @@ export class Gallery{
 
   updateHTML(){
     document.querySelector(".gi-container").innerHTML = '';
-    this.activeArray.images.forEach((imageObject,index) => {
+    this.activeArray.images.forEach((imageObject) => {
         galleryImage(
         document.querySelector(".gi-container"),
         imageObject.source,
@@ -60,7 +78,7 @@ export class Gallery{
 
   animateLoading(){
     const imageContainers = document.querySelectorAll(".gi-item");
-    const images = document.querySelectorAll(".gi-thumbnail")
+    const images = document.querySelectorAll(".gi-thumbnail");
     let t1 = new TimelineLite();
     t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger").
        staggerFrom(images,1,{opacity:0, rotationX:180, rotationZ:180, ease: Power0.easeNone}, -0.3, "stagger");
@@ -101,7 +119,7 @@ export class Gallery{
        element.onclick = popUpOn(element);
     });
 
-    let giButtonClose = document.querySelector(".gi-close");
+    let giButtonClose = document.querySelector(".gi-closebutton");
     giButtonClose.onclick = popUpClose;
 
     window.onresize = positionPopup;

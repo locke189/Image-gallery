@@ -23,10 +23,9 @@ import { Gallery } from './gallery/gallery';
 
   //image test
   const element  = document.getElementById("widget");
-  const myButton  = document.getElementById("myButton");
 
   //Gallery test
-  const gallery = new Gallery(element, file.images,4);
+  const gallery = new Gallery(element, file.images,6);
 
 
   window.onload = function(event){

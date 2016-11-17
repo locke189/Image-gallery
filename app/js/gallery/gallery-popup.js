@@ -1,4 +1,27 @@
   export function positionPopup(){
+  }
+
+
+
+  export function popUpOn(element){
+    return () => {
+      console.log('popup on');
+      document.getElementById("gi-popup").style.height = "100%";
+      document.querySelector(".gi-fullsize").src = element.children[1].children[0].src;
+    };
+
+  }
+
+
+  export function popUpClose(){
+    console.log('popup off');
+    document.getElementById("gi-popup").style.height = "0%";
+  }
+
+
+
+
+  export function positionPopup2(){
       const popup = document.getElementById("gi-popUpDiv");
       const imgWidth = document.querySelector(".gi-fullsize").width;
       const imgHeight = document.querySelector(".gi-fullsize").height;
@@ -8,7 +31,7 @@
 
 
 
-  export function popUpOn(element){
+  export function popUpOn2(element){
     return () => {
       let mask = document.getElementById("gi-mask");
       let popup = document.getElementById("gi-popUpDiv");
@@ -30,7 +53,7 @@
   }
 
 
-  export function popUpClose(){
+  export function popUpClose2(){
 
     let mask = document.getElementById("gi-mask");
     let popup = document.getElementById("gi-popUpDiv");

@@ -66,10 +66,9 @@
 	
 	//image test
 	var element = document.getElementById("widget");
-	var myButton = document.getElementById("myButton");
 	
 	//Gallery test
-	var gallery = new _gallery.Gallery(element, file.images, 4);
+	var gallery = new _gallery.Gallery(element, file.images, 6);
 	
 	window.onload = function (event) {
 	  console.log("window.onload");
@@ -201,8 +200,24 @@
 	      page: 0
 	    };
 	
-	    this.template = '\n\n      <div id="gi-mask"  class="gi-popup"style="display:none"></div>\n      <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">\n        <span class="gi-close">&times;</span>\n        <img src="http://placehold.it/350x250/ff0000?text=Image1" class="gi-fullsize" alt="">\n      </div>\n\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> ' + (this.activeArray.page + 1) + ' / ' + this.galleryImageArray.length + ' </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
+	    this.template = '\n\n    <div id="gi-popup" class="gi-overlay">\n        <a href="#" class="gi-closebutton" >&times;</a>\n        <div class="gi-overlay-content">\n          <img src="" class="gi-fullsize" alt="">\n        </div>\n    </div>\n\n     <section class="gi-container"></section>\n     <section class="gi-buttons-container">\n       <span class="gi-pager"> ' + (this.activeArray.page + 1) + ' / ' + this.galleryImageArray.length + ' </span>\n       <button class="gi-button">Next Project</button>\n     </section>\n    ';
 	
+	    /** WORKING TEMPLATE
+	        this.template = `
+	    
+	          <div id="gi-mask"  class="gi-popup"style="display:none"></div>
+	          <div id="gi-popUpDiv" class="gi-popup gi-img-wrap" style="display:none">
+	            <span class="gi-close">&times;</span>
+	            <img src="http://placehold.it/350x250/ff0000?text=Image1" class="gi-fullsize" alt="">
+	          </div>
+	    
+	         <section class="gi-container"></section>
+	         <section class="gi-buttons-container">
+	           <span class="gi-pager"> ${ this.activeArray.page + 1 } / ${this.galleryImageArray.length } </span>
+	           <button class="gi-button">Next Project</button>
+	         </section>
+	        `;
+	    **/
 	    (0, _helperFunctions.imagePreloader)(this.activeArray.images.map(function (imageObject) {
 	      return imageObject.source;
 	    }, this.renderHtml(parentElement)));
@@ -212,7 +227,7 @@
 	    key: 'renderHtml',
 	    value: function renderHtml(element) {
 	      element.innerHTML = this.template;
-	      this.activeArray.images.forEach(function (imageObject, index) {
+	      this.activeArray.images.forEach(function (imageObject) {
 	        (0, _galleryImage.galleryImage)(document.querySelector(".gi-container"), imageObject.source, imageObject.descrption);
 	      });
 	      this.animateLoading();
@@ -222,7 +237,7 @@
 	    key: 'updateHTML',
 	    value: function updateHTML() {
 	      document.querySelector(".gi-container").innerHTML = '';
-	      this.activeArray.images.forEach(function (imageObject, index) {
+	      this.activeArray.images.forEach(function (imageObject) {
 	        (0, _galleryImage.galleryImage)(document.querySelector(".gi-container"), imageObject.source, imageObject.descrption);
 	      });
 	      this.animateLoading();
@@ -278,7 +293,7 @@
 	        element.onclick = (0, _galleryPopup.popUpOn)(element);
 	      });
 	
-	      var giButtonClose = document.querySelector(".gi-close");
+	      var giButtonClose = document.querySelector(".gi-closebutton");
 	      giButtonClose.onclick = _galleryPopup.popUpClose;
 	
 	      window.onresize = _galleryPopup.positionPopup;
@@ -300,7 +315,25 @@
 	exports.positionPopup = positionPopup;
 	exports.popUpOn = popUpOn;
 	exports.popUpClose = popUpClose;
-	function positionPopup() {
+	exports.positionPopup2 = positionPopup2;
+	exports.popUpOn2 = popUpOn2;
+	exports.popUpClose2 = popUpClose2;
+	function positionPopup() {}
+	
+	function popUpOn(element) {
+	  return function () {
+	    console.log('popup on');
+	    document.getElementById("gi-popup").style.height = "100%";
+	    document.querySelector(".gi-fullsize").src = element.children[1].children[0].src;
+	  };
+	}
+	
+	function popUpClose() {
+	  console.log('popup off');
+	  document.getElementById("gi-popup").style.height = "0%";
+	}
+	
+	function positionPopup2() {
 	  var popup = document.getElementById("gi-popUpDiv");
 	  var imgWidth = document.querySelector(".gi-fullsize").width;
 	  var imgHeight = document.querySelector(".gi-fullsize").height;
@@ -308,7 +341,7 @@
 	  popup.style.left = (document.body.parentNode.clientWidth - imgWidth) / 2 + 'px';
 	}
 	
-	function popUpOn(element) {
+	function popUpOn2(element) {
 	  return function () {
 	    var mask = document.getElementById("gi-mask");
 	    var popup = document.getElementById("gi-popUpDiv");
@@ -327,7 +360,7 @@
 	  };
 	}
 	
-	function popUpClose() {
+	function popUpClose2() {
 	
 	  var mask = document.getElementById("gi-mask");
 	  var popup = document.getElementById("gi-popUpDiv");

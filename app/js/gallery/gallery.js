@@ -60,8 +60,10 @@ export class Gallery{
 
   animateLoading(){
     const imageContainers = document.querySelectorAll(".gi-item");
+    const images = document.querySelectorAll(".gi-thumbnail")
     let t1 = new TimelineLite();
-    t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger");
+    t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger").
+       staggerFrom(images,1,{opacity:0, rotationX:180, rotationZ:180, ease: Power0.easeNone}, -0.3, "stagger");
 
   }
 

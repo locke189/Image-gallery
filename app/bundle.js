@@ -232,8 +232,9 @@
 	    key: 'animateLoading',
 	    value: function animateLoading() {
 	      var imageContainers = document.querySelectorAll(".gi-item");
+	      var images = document.querySelectorAll(".gi-thumbnail");
 	      var t1 = new TimelineLite();
-	      t1.staggerFrom(imageContainers, 1, { opacity: 0, x: "-1000", ease: Power0.easeNone }, -0.3, "stagger");
+	      t1.staggerFrom(imageContainers, 1, { opacity: 0, x: "-1000", ease: Power0.easeNone }, -0.3, "stagger").staggerFrom(images, 1, { opacity: 0, rotationX: 180, rotationZ: 180, ease: Power0.easeNone }, -0.3, "stagger");
 	    }
 	  }, {
 	    key: 'nextSet',

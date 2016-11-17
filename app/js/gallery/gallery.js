@@ -1,10 +1,11 @@
-import { GalleryImage } from './gallery-image';
+import { positionPopup, popUpOn, popUpClose } from './gallery-popup';
+import { galleryImage } from './gallery-image';
 import { chunker, imagePreloader } from '../helper-functions';
 
 export class Gallery{
-  constructor(parentElement, arrayOfImages = []){
+  constructor(parentElement, arrayOfImages = [],parts){
     this.totalImages = arrayOfImages.length;
-    this.galleryImageArray = chunker(arrayOfImages,6);
+    this.galleryImageArray = chunker(arrayOfImages,parts);
     this.activeArray = {
       images: this.galleryImageArray[0],
       page: 0,
@@ -33,10 +34,9 @@ export class Gallery{
 
   renderHtml(element){
     element.innerHTML = this.template;
-    this.galleryImageArray2 = this.activeArray.images.map((imageObject,index) => {
-      return new GalleryImage(
+    this.activeArray.images.forEach((imageObject,index) => {
+        galleryImage(
         document.querySelector(".gi-container"),
-        index,
         imageObject.source,
         imageObject.descrption
       );
@@ -47,10 +47,9 @@ export class Gallery{
 
   updateHTML(){
     document.querySelector(".gi-container").innerHTML = '';
-    this.galleryImageArray2 = this.activeArray.images.map((imageObject,index) => {
-      return new GalleryImage(
+    this.activeArray.images.forEach((imageObject,index) => {
+        galleryImage(
         document.querySelector(".gi-container"),
-        index,
         imageObject.source,
         imageObject.descrption
       );
@@ -61,8 +60,6 @@ export class Gallery{
 
   animateLoading(){
     const imageContainers = document.querySelectorAll(".gi-item");
-
-    console.log('Animating...');
     let t1 = new TimelineLite();
     t1.staggerFrom(imageContainers,1,{opacity:0, x:"-1000", ease: Power0.easeNone}, -0.3, "stagger");
 
@@ -75,7 +72,7 @@ export class Gallery{
       this.activeArray.page = 0;
     }
     this.activeArray.images = this.galleryImageArray[this.activeArray.page];
-    console.log(this.activeArray);
+
     imagePreloader( this.activeArray.images.map( imageObject  => { return imageObject.source; } ) );
     this.updateHTML();
     this.setEventListeners();
@@ -89,95 +86,26 @@ export class Gallery{
   }
 
   setEventListeners(){
-    //Set up listeners   this.nextSet.bind(this)
+    //Set up listeners
     let giButton = document.querySelector(".gi-button");
     giButton.onclick = this.setAnimationTo(document.querySelectorAll(".gi-item"),0.2,{opacity:0, ease: Power0.easeNone, onComplete: this.nextSet.bind(this)});
 
     document.querySelectorAll(".gi-img-text").forEach(  (element) => {
-      console.log('this is working');
       element.onmouseenter = this.setAnimationTo(element,0.2,{opacity:0.8, ease: Power0.easeNone});
       element.onmouseleave = this.setAnimationTo(element,0.2,{opacity:0, ease: Power0.easeNone});
     });
 
     document.querySelectorAll(".gi-item").forEach(  (element) => {
-          console.log('this is working');
-      //element.onclick = this.setAnimationTo(document.getElementById("gi-mask"),0.2,{opacity:0.65, ease: Power0.easeNone});
-      element.onclick = this.popUpOn(element);
+       element.onclick = popUpOn(element);
     });
 
-
     let giButtonClose = document.querySelector(".gi-close");
-    giButtonClose.onclick = this.togglePopUp;
+    giButtonClose.onclick = popUpClose;
 
-
-    window.onresize = this.positionPopup;
-
-  }
-
-  positionPopup(){
-      const popup = document.getElementById("gi-popUpDiv");
-      const imgWidth = document.querySelector(".gi-fullsize").width;
-      const imgHeight = document.querySelector(".gi-fullsize").height;
-      console.log(`X = ${imgWidth} clientWidth = ${document.body.parentNode.clientWidth}`);
-      console.log(`Y = ${imgHeight} clientHeight = ${document.documentElement.clientHeight}`);
-      popup.style.top =  ((document.documentElement.clientHeight-imgHeight)/2) + 'px';
-      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
-  }
-
-
-  togglePopUp(){
-    let mask = document.getElementById("gi-mask");
-    let popup = document.getElementById("gi-popUpDiv");
-    let t1 = new TimelineLite();
-    const imgWidth = document.querySelector(".gi-fullsize").width;
-    const imgHeigth = document.querySelector(".gi-fullsize").heigth;
-    console.log(mask);
-
-    if ( mask.style.display === 'none' ) {
-      mask.style.display = 'block';
-      popup.style.display = 'block';
-      popup.style.top =  ((document.documentElement.clientHeight-imgHeigth)/2) + 'px';
-      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
-      t1.to(mask,0.2,{opacity:0.8, ease: Power0.easeNone}).
-        to(popup,0.2,{opacity:1, ease: Power0.easeNone});
-    }else {
-
-      t1.to(mask,0.2,{opacity:0, ease: Power0.easeNone, onComplete: () => {
-        mask.style.display = 'none';
-        popup.style.display = 'none';
-      }}).to(popup,0.2,{opacity:0, ease: Power0.easeNone});
-
-    }
+    window.onresize = positionPopup;
 
   }
 
-  popUpOn(element){
-    return () => {
-      let mask = document.getElementById("gi-mask");
-      let popup = document.getElementById("gi-popUpDiv");
-      let t1 = new TimelineLite();
 
-      document.querySelector(".gi-fullsize").src = element.children[1].children[0].src;
-
-      const imgWidth = document.querySelector(".gi-fullsize").width;
-      const imgHeight = document.querySelector(".gi-fullsize").height;
-      mask.style.display = 'block';
-      popup.style.display = 'block';
-      console.log(`X = ${imgWidth} clientWidth = ${document.body.parentNode.clientWidth}`);
-      console.log(`Y = ${imgHeight} clientHeight = ${document.documentElement.clientHeight}`);
-      popup.style.top =  ((document.documentElement.clientHeight-imgHeight)/2) + 'px';
-      popup.style.left = ((document.body.parentNode.clientWidth-imgWidth)/2) + 'px';
-      t1.to(mask,0.2,{opacity:0.8, ease: Power0.easeNone}).
-      to(popup,0.2,{opacity:1, ease: Power0.easeNone});
-    };
-
-  }
-
-  popUpAnimationOn(){
-
-    this.togglePopUp();
-
-
-  }
 
 }

@@ -41,7 +41,6 @@ export function chunker(originalArray, size){
 
   originalArray.forEach( (element) => {
      array.push(element);
-     console.log(array.length);
      if( array.length === size ){
        chunkArray.push(array);
        array = [];

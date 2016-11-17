@@ -26,7 +26,7 @@ import { Gallery } from './gallery/gallery';
   const myButton  = document.getElementById("myButton");
 
   //Gallery test
-  const gallery = new Gallery(element, file.images);
+  const gallery = new Gallery(element, file.images,4);
 
 
   window.onload = function(event){
